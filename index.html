@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>帝国群局分组辅助</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 350px;
+            text-align: center;
+        }
+        h3 {
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 20px;
+        }
+        .score-container {
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+        .score-container label {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100px;
+            padding: 8px;
+            margin: 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 15px;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            color: #e63946;
+            font-size: 18px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        p {
+            font-size: 14px;
+            color: #ffb84d;
+        }
+        .group-label {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h3>帝国群局分组辅助</h3>
+        <div class="score-container">
+            <label for="room-name">筛选房间名:</label>
+            <input type="text" id="room-name" placeholder="请输入房间名" value="777" />
+        </div>
+
+        <div id="players">
+            <!-- 玩家输入框和分数 -->
+            <div class="score-container">
+                <label for="score1">玩家1:</label>
+                <span id="player1-name"></span>
+                <input type="number" step="0.5" id="score1" />
+                <span id="group1-1" class="group-label"></span>
+            </div>
+            <div class="score-container">
+                <label for="score2">玩家2:</label>
+                <span id="player2-name"></span>
+                <input type="number" step="0.5" id="score2" />
+                <span id="group1-2" class="group-label"></span>
+            </div>
+            <div class="score-container">
+                <label for="score3">玩家3:</label>
+                <span id="player3-name"></span>
+                <input type="number" step="0.5" id="score3" />
+                <span id="group1-3" class="group-label"></span>
+            </div>
+            <div class="score-container">
+                <label for="score4">玩家4:</label>
+                <span id="player4-name"></span>
+                <input type="number" step="0.5" id="score4" />
+                <span id="group1-4" class="group-label"></span>
+            </div>
+            <div class="score-container">
+                <label for="score5">玩家5:</label>
+                <span id="player5-name"></span>
+                <input type="number" step="0.5" id="score5" />
+                <span id="group1-5" class="group-label"></span>
+            </div>
+            <div class="score-container">
+                <label for="score6">玩家6:</label>
+                <span id="player6-name"></span>
+                <input type="number" step="0.5" id="score6" />
+                <span id="group1-6" class="group-label"></span>
+            </div>
+            <div class="score-container">
+                <label for="score7">玩家7:</label>
+                <span id="player7-name"></span>
+                <input type="number" step="0.5" id="score7" />
+                <span id="group1-7" class="group-label"></span>
+            </div>
+            <div class="score-container">
+                <label for="score8">玩家8:</label>
+                <span id="player8-name"></span>
+                <input type="number" step="0.5" id="score8" />
+                <span id="group1-8" class="group-label"></span>
+            </div>
+        </div>
+
+        <p>非最优解，建议依据实际情况调整</p>
+
+        <button onclick="fetchRoomData()">加载并计算</button>
+
+        <div id="result" class="result"></div>
+    </div>
+
+ <script>
+        // 玩家数据
+        // 阿拉伯分
+const playersMapType9 = [
+  { "user_id": 9625104, "name": "帝国飘飘叶", "score": 3.0 },
+  { "user_id": 657572, "name": "帝国猜苹果", "score": 3.5 },
+  { "user_id": 1883429, "name": "帝国大局长", "score": 4.0 },
+  { "user_id": 6845756, "name": "帝国大平果", "score": 5 },
+  { "user_id": 12176718, "name": "帝国大钢炮", "score": 6 },
+  { "user_id": 551584, "name": "Mr灬永恒", "score": 7.5 },
+  { "user_id": 6031883, "name": "低调的东莞仔", "score": 7 },
+  { "user_id": 2008017, "name": "肥龙基巴小", "score": 9.5 },
+  { "user_id": 2972505, "name": "旋律", "score": 10.5 },
+  { "user_id": 10348187, "name": "专杀天下负心人", "score": 5 },
+  { "user_id": 4213796, "name": "word马亚", "score": 6.5 },
+  { "user_id": 4708192, "name": "_LY_抖音山歌", "score": 7 },
+  { "user_id": 1605842, "name": "幼稚园园草", "score": 8 },
+  { "user_id": 1906206, "name": "_帝国精灵_", "score": 9 },
+  { "user_id": 4797984, "name": "苦修", "score": 9.5 },
+  { "user_id": 6048339, "name": "帝国唐平果", "score": 5.5 },
+  { "user_id": 210228, "name": "couch potato", "score": 6.5 },
+  { "user_id": 660052, "name": "liwenbin", "score": 7 },
+  { "user_id": 719506, "name": "摆烂菜鸟", "score": 8 },
+  { "user_id": 811511, "name": "kanon", "score": 9.5 },
+  { "user_id": 5401681, "name": "钢铁兽", "score": 5.5 },
+  { "user_id": 10240269, "name": "关老二是也", "score": 6.5 },
+  { "user_id": 18016120, "name": "Three tu", "score": 7 },
+  { "user_id": 414036, "name": "Archie", "score": 8.5 },
+  { "user_id": 2892819, "name": "帝国大烟枪5", "score": 5.5 },
+  { "user_id": 494631, "name": "百万伏特pk", "score": 6.5 },
+  { "user_id": 3096444, "name": "br135", "score": 7 },
+  { "user_id": 18719293, "name": "Ryutaku", "score": 8.5 },
+  { "user_id": 4988881, "name": "捣~ ~ ~蛋", "score": 5.5 },
+  { "user_id": 1584097, "name": "cancer", "score": 6 },
+  { "user_id": 14003524, "name": "帝国大山鸡", "score": 7.5 },
+  { "user_id": 2911382, "name": "socool", "score": 5.5 },
+  { "user_id": 330105, "name": "Mr.shooting", "score": 6 },
+  { "user_id": 1130913, "name": "落雪成眠", "score": 7 },
+  { "user_id": 4818095, "name": "带个扳手很合理", "score": 5.5 },
+  { "user_id": 11642871, "name": "将心", "score": 7 },
+  { "user_id": 10318308, "name": "帝国大流氓", "score": 5 },
+  { "user_id": 14612848, "name": "英雄在中", "score": 7 },
+  { "user_id": 18656416, "name": "草履虫大战膨胀威", "score": 5.5 },
+  { "user_id": 1843693, "name": "Immortals", "score": 7 },
+  { "user_id": 20084115, "name": "兄弟们我后期贼猛 顶住", "score": 5.5 },
+  { "user_id": 1547057, "name": "Paladin", "score": 5 },
+  { "user_id": 409367, "name": "Allen", "score": 6 },
+  { "user_id": 20658624, "name": "冰王_iKun", "score": 5.5 },
+  { "user_id": 7167807, "name": "新哥仔", "score": 5.5 },
+  { "user_id": 6637168, "name": "红警2无敌天煞", "score": 5.5 },
+  { "user_id": 668186, "name": "短腿土猫", "score": 6.5 },
+  { "user_id": 1906967, "name": "罩wo", "score": 3 },
+  { "user_id": 6310574, "name": "嘉宝哥哥", "score": 9.5 },
+  { "user_id": 2046589, "name": "麻E美", "score": 7 }
+
+];
+        // 玩家数据
+        // 游牧分
+const playersMapType33 = [
+  { "user_id": 9625104, "name": "帝国飘飘叶", "score": 3.0 },
+  { "user_id": 657572, "name": "帝国猜苹果", "score": 3 },
+  { "user_id": 1883429, "name": "帝国大局长", "score": 4.0 },
+  { "user_id": 6845756, "name": "帝国大平果", "score": 4.0 },
+  { "user_id": 18656416, "name": "草履虫大战膨胀威", "score": 5.0 },
+  { "user_id": 10348187, "name": "专杀天下负心人", "score": 5.0 },
+  { "user_id": 12176718, "name": "帝国大钢炮", "score": 5.5 },
+  { "user_id": 494631, "name": "百万伏特pk", "score": 5.5 },
+  { "user_id": 7167807, "name": "新哥仔", "score": 5.0 },
+  { "user_id": 2892819, "name": "帝国大烟枪5", "score": 5.5 },
+  { "user_id": 6637168, "name": "红警2无敌天煞", "score": 5.0 },
+  { "user_id": 10318308, "name": "帝国大流氓", "score": 5.0 },
+  { "user_id": 20084115, "name": "兄弟们我后期贼猛 顶住", "score": 5.5 },
+  { "user_id": 5401681, "name": "钢铁兽", "score": 6.0 },
+  { "user_id": 409367, "name": "Allen", "score": 6.0 },
+  { "user_id": 2911382, "name": "socool", "score": 5.0 },
+  { "user_id": 6048339, "name": "帝国唐平果", "score": 5.5 },
+  { "user_id": 1547057, "name": "Paladin", "score": 5.5 },
+  { "user_id": 20658624, "name": "冰王_iKun", "score": 5.5 },
+  { "user_id": 4818095, "name": "带个扳手很合理", "score": 6.0 },
+  { "user_id": 4988881, "name": "捣~ ~ ~蛋", "score": 6.0 },
+  { "user_id": 660052, "name": "liwenbin", "score": 6.5 },
+  { "user_id": 3096444, "name": "br135", "score": 6.5 },
+  { "user_id": 18016120, "name": "Three tu", "score": 6.5 },
+  { "user_id": 551584, "name": "Mr灬永恒", "score": 6.5 },
+  { "user_id": 4213796, "name": "word马亚", "score": 6.0 },
+  { "user_id": 14003524, "name": "帝国大山鸡", "score": 6.0 },
+  { "user_id": 330105, "name": "Mr.shooting", "score": 6.0 },
+  { "user_id": 668186, "name": "短腿土猫", "score": 6.5 },
+  { "user_id": 11642871, "name": "将心", "score": 7.0 },
+  { "user_id": 1843693, "name": "Immortals", "score": 7.5 },
+  { "user_id": 1130913, "name": "落雪成眠", "score": 7.0 },
+  { "user_id": 6031883, "name": "低调的东莞仔", "score": 7.0 },
+  { "user_id": 4708192, "name": "_LY_抖音山歌", "score": 7.0 },
+  { "user_id": 14612848, "name": "英雄在中", "score": 7.0 },
+  { "user_id": 10240269, "name": "关老二是也", "score": 7.0 },
+  { "user_id": 719506, "name": "摆烂菜鸟", "score": 8.5 },
+  { "user_id": 1605842, "name": "幼稚园园草", "score": 8.0 },
+  { "user_id": 1906206, "name": "_帝国精灵_", "score": 8.0 },
+  { "user_id": 18719293, "name": "Ryutaku", "score": 8.0 },
+  { "user_id": 210228, "name": "couch potato", "score": 8.0 },
+  { "user_id": 2008017, "name": "肥龙基巴小", "score": 9.0 },
+  { "user_id": 414036, "name": "Archie", "score": 9.0 },
+  { "user_id": 4797984, "name": "苦修", "score": 9.0 },
+  { "user_id": 2972505, "name": "旋律", "score": 10.5 },
+  { "user_id": 811511, "name": "kanon", "score": 10.0 },
+  { "user_id": 1906967, "name": "罩wo", "score": 9 },
+  { "user_id": 6310574, "name": "嘉宝哥哥", "score": 9.5 },
+  { "user_id": 2046589, "name": "麻E美", "score": 7.5 }
+];
+
+async function fetchRoomData() {
+    const corsProxy = 'https://api.codetabs.com/v1/proxy/?quest=';
+    const targetUrl = 'https://www.aoe2insights.com/lobbies/api';
+    
+    const roomName = document.getElementById('room-name').value;
+
+    if (!roomName) {
+        alert("请输入房间名");
+        return;
+    }
+
+    // 发送请求获取房间数据
+    const response = await fetch(corsProxy + targetUrl);
+    const rooms = await response.json();
+
+    // 找到完全匹配的房间
+    const selectedRoom = rooms.find(room => room.name === roomName);
+    if (!selectedRoom) {
+        alert("未找到匹配的房间");
+        return;
+    }
+
+    const mapType = selectedRoom.map_type;
+    const players = (mapType === 33 || mapType === 149) ? playersMapType33 : playersMapType9;
+    const roomPlayers = [];
+
+    // 提取房间中的玩家信息
+    Object.values(selectedRoom.slots).forEach(slot => {
+        if (slot.name) {
+            const playerScore = slot.elo_1v1 || slot.elo_team || 0;
+            roomPlayers.push({ user_id: slot.user_id, name: slot.name, score: playerScore, elo: slot.elo_1v1 });
+        }
+    });
+
+    // 填充玩家信息到页面
+    roomPlayers.forEach((player, index) => {
+        // 优先匹配 user_id，如果没有匹配项再匹配 name
+        let matchedPlayer = players.find(p => p.user_id === player.user_id);
+        if (!matchedPlayer) {
+            matchedPlayer = players.find(p => p.name === player.name);
+        }
+
+        if (matchedPlayer) {
+            const scoreInput = document.getElementById(`score${index + 1}`);
+            const playerNameSpan = document.getElementById(`player${index + 1}-name`);
+            const eloDisplay = player.elo !== null ? `(${player.elo})` : "(null)";
+
+            if (scoreInput && playerNameSpan) {
+                scoreInput.value = matchedPlayer.score;
+                playerNameSpan.textContent = `${matchedPlayer.name} ${eloDisplay}`;
+                scoreInput.disabled = true;
+            }
+        }
+    });
+
+    // 调用分组计算函数
+    computed();
+}
+
+function computed() {
+    let resultDom = document.getElementById("result");
+
+    // 获取分数并按降序排序
+    const scoreList = [...document.querySelectorAll('input[type="number"]')]
+        .map((item, index) => ({
+            score: Number(item.value),
+            playerId: index + 1,
+            playerName: document.getElementById(`player${index + 1}-name`).textContent
+        }))
+        .filter(player => !isNaN(player.score) && player.score > 0)
+        .sort((a, b) => b.score - a.score);
+
+    // 检查玩家人数是否为偶数
+    if (scoreList.length % 2 !== 0) {
+        resultDom.innerHTML = "玩家人数必须为偶数，无法平分";
+        return;
+    }
+
+    // 定义组分配索引
+    const group1Indices = [0, 3, 5, 6];
+    const group2Indices = [1, 2, 4, 7];
+
+    let group1 = [], group2 = [];
+    let sum1 = 0, sum2 = 0;
+
+    // 分配玩家到组1和组2
+    scoreList.forEach((player, index) => {
+        if (group1Indices.includes(index)) {
+            group1.push(player);
+            sum1 += player.score;
+            document.getElementById(`group1-${player.playerId}`).textContent = "组1";
+        } else if (group2Indices.includes(index)) {
+            group2.push(player);
+            sum2 += player.score;
+            document.getElementById(`group1-${player.playerId}`).textContent = "组2";
+        }
+    });
+
+    // 尝试平衡分数
+    let difference = Math.abs(sum1 - sum2);
+    let threshold = 0.5;
+
+    while (difference > threshold) {
+        let swapped = false;
+
+        for (let i = 0; i < group1.length; i++) {
+            for (let j = 0; j < group2.length; j++) {
+                const newSum1 = sum1 - group1[i].score + group2[j].score;
+                const newSum2 = sum2 - group2[j].score + group1[i].score;
+                const newDifference = Math.abs(newSum1 - newSum2);
+
+                if (newDifference < difference) {
+                    [group1[i], group2[j]] = [group2[j], group1[i]];
+                    sum1 = newSum1;
+                    sum2 = newSum2;
+                    document.getElementById(`group1-${group1[i].playerId}`).textContent = "组1";
+                    document.getElementById(`group1-${group2[j].playerId}`).textContent = "组2";
+                    swapped = true;
+                    difference = newDifference;
+                    break;
+                }
+            }
+            if (swapped) break;
+        }
+
+        if (!swapped) break;
+    }
+
+    // 显示最终平衡的分组及总分
+    resultDom.innerHTML = 
+        group1.map(player => player.score).join(" + ") + " / " + group2.map(player => player.score).join(" + ") + "<br>" +
+        "总分: " + sum1 + " / " + sum2;
+}
+    </script>
+</body>
+</html>
+
