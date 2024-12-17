@@ -264,7 +264,7 @@ const playersMapType33 = [
 ];
 
 async function fetchRoomData() {
-    const corsProxy = 'https://seep.eu.org/';
+    const corsProxy = 'https://cors.eu.org/';
     const targetUrl = 'https://www.aoe2insights.com/lobbies/api';
     
     const roomName = document.getElementById('room-name').value;
@@ -274,8 +274,14 @@ async function fetchRoomData() {
         return;
     }
 
+    // 设置请求头
+    const headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'Accept': 'application/json',
+    };
+
     // 发送请求获取房间数据
-    const response = await fetch(corsProxy + targetUrl);
+    const response = await fetch(corsProxy + targetUrl, { headers });
     const rooms = await response.json();
 
     // 找到完全匹配的房间
