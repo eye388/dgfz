@@ -312,13 +312,13 @@ async function fetchRoomData() {
         }
 
         if (matchedPlayer) {
-            const scoreInput = document.getElementById('score${index + 1}');
-            const playerNameSpan = document.getElementById('player${index + 1}-name');
-            const eloDisplay = player.elo !== null ? '(${player.elo})' : "(null)";
+            const scoreInput = document.getElementById(`score${index + 1}`);
+            const playerNameSpan = document.getElementById(`player${index + 1}-name`);
+            const eloDisplay = player.elo !== null ? `(${player.elo})` : "(null)";
 
             if (scoreInput && playerNameSpan) {
                 scoreInput.value = matchedPlayer.score;
-                playerNameSpan.textContent = '${matchedPlayer.name} ${eloDisplay}';
+                playerNameSpan.textContent = `${matchedPlayer.name} ${eloDisplay}`;
                 scoreInput.disabled = true;
             }
         }
