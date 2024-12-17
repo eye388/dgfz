@@ -145,7 +145,7 @@
         <div id="result" class="result"></div>
     </div>
 
- <script>
+<script>
         // 玩家数据
         // 阿拉伯分
 const playersMapType9 = [
@@ -264,7 +264,7 @@ const playersMapType33 = [
 ];
 
 async function fetchRoomData() {
-    const corsProxy = 'https://cors.eu.org/';
+    const corsProxy = 'https://api.codetabs.com/v1/proxy/?quest=';
     const targetUrl = 'https://www.aoe2insights.com/lobbies/api';
     
     const roomName = document.getElementById('room-name').value;
@@ -276,7 +276,7 @@ async function fetchRoomData() {
 
     // 设置请求头
     const headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
         'Accept': 'application/json',
     };
 
@@ -327,7 +327,6 @@ async function fetchRoomData() {
     // 调用分组计算函数
     computed();
 }
-
 function computed() {
     let resultDom = document.getElementById("result");
 
@@ -336,7 +335,7 @@ function computed() {
         .map((item, index) => ({
             score: Number(item.value),
             playerId: index + 1,
-            playerName: document.getElementById('player${index + 1}-name').textContent
+            playerName: document.getElementById(`player${index + 1}-name`).textContent
         }))
         .filter(player => !isNaN(player.score) && player.score > 0)
         .sort((a, b) => b.score - a.score);
@@ -359,11 +358,11 @@ function computed() {
         if (group1Indices.includes(index)) {
             group1.push(player);
             sum1 += player.score;
-            document.getElementById('group1-${player.playerId}').textContent = "组1";
+            document.getElementById(`group1-${player.playerId}`).textContent = "组1";
         } else if (group2Indices.includes(index)) {
             group2.push(player);
             sum2 += player.score;
-            document.getElementById('group1-${player.playerId}').textContent = "组2";
+            document.getElementById(`group1-${player.playerId}`).textContent = "组2";
         }
     });
 
@@ -384,8 +383,8 @@ function computed() {
                     [group1[i], group2[j]] = [group2[j], group1[i]];
                     sum1 = newSum1;
                     sum2 = newSum2;
-                    document.getElementById('group1-${group1[i].playerId}').textContent = "组1";
-                    document.getElementById('group1-${group2[j].playerId}').textContent = "组2";
+                    document.getElementById(`group1-${group1[i].playerId}`).textContent = "组1";
+                    document.getElementById(`group1-${group2[j].playerId}`).textContent = "组2";
                     swapped = true;
                     difference = newDifference;
                     break;
@@ -405,3 +404,4 @@ function computed() {
     </script>
 </body>
 </html>
+
