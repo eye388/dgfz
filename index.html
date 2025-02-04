@@ -287,13 +287,13 @@ async function fetchRoomData() {
     }
 
     // 设置请求头
-    const headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
-        'Accept': 'application/json',
-    };
+    // const headers = {
+    //     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36',
+   //      'Accept': 'application/json',
+   //  };
 
     // 发送请求获取房间数据
-    const response = await fetch(corsProxy + targetUrl, { headers });
+    const response = await fetch(corsProxy + targetUrl);
     const rooms = await response.json();
 
     // 找到完全匹配的房间
